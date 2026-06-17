@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>STAGE.LAB // Production Master</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght=700&family=Space+Grotesk:wght=500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-main: #FFFFFF;
+            --bg-accent: #F4F4F5;
+            --text-dark: #000000;
+            --text-muted: #525252;
+            --border-line: #E4E4E7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- SCRIPT VIEWPORT & TOP BRANDING --- */
+        .script-viewport {
+            height: 38%;
+            background: var(--bg-main);
+            border-bottom: 1px solid var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 28px;
+            text-align: center;
+            position: relative;
+        }
+
+        .brand-header {
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .script-text {
+            font-family: 'Courier Prime', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.4;
+            max-width: 95%;
+            margin-top: 15px;
+        }
+
+        /* --- CONTROL STATION FEED --- */
+        .controls-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 16px;
+            background: var(--bg-accent);
+        }
+
+        .category-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 14px;
+            background: var(--bg-main);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border-line);
+        }
+
+        .category-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .category-btn.active {
+            background: var(--text-dark);
+            color: var(--bg-main);
+        }
+
+        .info-scroll {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding-bottom: 10px;
+        }
+
+        .label-text {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .info-box {
+            background: var(--bg-main);
+            border: 1px solid var(--border-line);
+            padding: 14px;
+            border-radius: 10px;
+        }
+
+        .info-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .reveal-box {
+            background: var(--bg-main);
+            border: 1px dashed var(--text-dark);
+            padding: 14px;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .reveal-box.hidden .info-desc {
+            filter: blur(6px);
+            opacity: 0.1;
+        }
+
+        .reveal-prompt {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--text-dark);
+            color: var(--bg-main);
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 6px;
+        }
+
+        /* --- ACTION FOOTER --- */
+        .footer-tray {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 10px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-line);
+            margin-bottom: 8px;
+        }
+
+        .action-btn {
+            background: var(--bg-main);
+            color: var(--text-dark);
+            border: 1px solid var(--text-dark);
+            padding: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn.black-out {
+            background: var(--text-dark);
+            color: var(--bg-main);
+            border: none;
+        }
+
+        .feedback-trigger-btn {
+            background: var(--bg-main);
+            border: 1px solid var(--border-line);
+            color: var(--text-dark);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        .action-btn:active, .feedback-trigger-btn:active {
+            opacity: 0.85;
+        }
+
+        /* --- TEXT-BASED FEEDBACK SLIDE-UP DRAWER --- */
+        .feedback-drawer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 75%;
+            background: var(--bg-main);
+            border-top: 2px solid var(--text-dark);
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -8px 24px rgba(0,0,0,0.1);
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.1, 0.76, 0.55, 0.94);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .feedback-drawer.open {
+            transform: translateY(0);
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .feedback-input {
+            width: 100%;
+            height: 80px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--text-dark);
+            font-family: sans-serif;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            margin-bottom: 12px;
+        }
+
+        .history-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+        }
+
+        .notes-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: var(--bg-accent);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-line);
+        }
+
+        .note-item {
+            background: var(--bg-main);
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 3px solid var(--text-dark);
+            font-size: 12.5px;
+            line-height: 1.4;
+            text-align: left;
+        }
+
+        .note-tag {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SCRIPT FOCUS ARTIFACT WITH BRAND ELEMENT -->
+    <section class="script-viewport">
+        <div class="brand-header">
+            <i class="fa-solid fa-clapperboard"></i> STAGE.LAB // Rehearsal Mode
+        </div>
+        <p class="script-text" id="scriptLineDisplay">"Loading system..."</p>
+    </section>
+
+    <!-- CONTENT DATA STREAM CONTROL CENTER -->
+    <section class="controls-panel">
+        
+        <div class="category-row">
+            <button class="category-btn active" id="tab-emotion" onclick="toggleMode('emotion')">🎭 Subtext Engine</button>
+            <button class="category-btn" id="tab-voice" onclick="toggleMode('voice')">🗣️ Vocal Delivery</button>
+        </div>
+
+        <div class="info-scroll">
+            <div>
+                <div class="label-text"><i class="fa-solid fa-compass"></i> Core Mechanism Analysis:</div>
+                <div class="info-box">
+                    <div class="info-title" id="modeTitle">---</div>
+                    <div class="info-desc" id="modeDesc">---</div>
+                </div>
+            </div>
+
+            <div>
+                <div class="label-text"><i class="fa-solid fa-eye-slash"></i> Hidden Layer (Subtextual Intention):</div>
+                <div class="reveal-box hidden" id="secretBox" onclick="clickRevealSecret()">
+                    <div class="reveal-prompt" id="secretLabel">Tap to Decipher</div>
+                    <div class="info-title" id="secretTitle">---</div>
+                    <div class="info-desc" id="secretDesc">---</div>
+                </div>
+            </div>
+
+            <div>
+                <div class="label-text"><i class="fa-solid fa-wand-magic-sparkles"></i> Performance Modifier:</div>
+                <div class="info-box" style="border-left: 3px solid var(--text-dark);">
+                    <div class="info-desc" id="tipDesc" style="color: var(--text-dark); font-weight: 500;">---</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Permanent Feedback Drawer Handle -->
+        <button class="feedback-trigger-btn" onclick="openFeedbackDrawer()">
+            <i class="fa-regular fa-comment-dots"></i> Review Takes & Log Feedback
+        </button>
+
+        <div class="footer-tray">
+            <button class="action-btn black-out" onclick="changeCard()">
+                <i class="fa-solid fa-arrow-right"></i> Next Setup
+            </button>
+            <button class="action-btn" onclick="mixUpDirectorNote()">
+                <i class="fa-solid fa-shuffle"></i> Mix Take
+            </button>
+        </div>
+    </section>
+
+    <!-- SLIDE-UP REAL LOG SYSTEM DRAWER -->
+    <div class="feedback-drawer" id="feedbackDrawer">
+        <div class="drawer-header">
+            <h3 class="info-title" style="font-size: 15px; margin: 0;"><i class="fa-solid fa-pen-to-square"></i> Performance Journal</h3>
+            <i class="fa-solid fa-xmark" style="font-size: 20px; cursor: pointer;" onclick="closeFeedbackDrawer()"></i>
+        </div>
+
+        <textarea class="feedback-input" id="feedbackNoteInput" placeholder="Type real feedback, take details, tone notes, or edits to remember..."></textarea>
+        
+        <button class="action-btn black-out" style="width: 100%; padding: 12px; font-size: 12px; margin-bottom: 10px;" onclick="saveFeedbackNote()">
+            Save Review Entry
+        </button>
+
+        <div class="history-title">Saved Production Log:</div>
+        <div class="notes-list" id="notesListContainer">
+            <div class="info-desc" id="emptyNotesMsg" style="text-align: center; margin-top: 20px;">No logged reviews yet. Type above to add one!</div>
+        </div>
+    </div>
+
+    <!-- MAIN SYSTEM ARCHITECTURE CONTROLLER -->
+    <script>
+        const gameDatabase = {
+            emotion: [
+                {
+                    title: "Uta Hagen Substitution Method",
+                    prompt: "If we don't leave this building right now, nothing else matters.",
+                    desc: "Swap out the fictional emergency for a real-world high-stakes disaster in your memory timeline. You are forcing the listener to take immediate physical action without sounding panicked.",
+                    secTitle: "The Psychological Anchor",
+                    secDesc: "Your objective is structural defense. If they stay here, their career layout or projects will completely crash.",
+                    tip: "Pin down your eyes. Deliver the line while completely limiting your secondary head gestures."
+                },
+                {
+                    title: "Subtextual Contradiction Blueprint",
+                    prompt: "Yeah. No, absolutely. You made the correct choice.",
+                    desc: "Analyze the difference between lip speech and conscious thoughts. The words express standard confirmation, but your physical system must display deep underlying stress.",
+                    secTitle: "Internal Monologue Tracker",
+                    secDesc: "The choice they made completely ruined your data workspace, and you are trying to clean up the error parameters before you blow your cover.",
+                    tip: "Keep a steady customer service smile fixed on your face, but make your eyes cold and unblinking."
+                },
+                {
+                    title: "Classic Tragedy / Grief Study",
+                    prompt: "All my pretty ones? Did you say all? O hell-kite! All?",
+                    desc: "Macduff's realization of his family's slaughter. Don't play the anger yet; play the absolute shock and disbelief of a person whose reality has collapsed.",
+                    secTitle: "Substitution: Loss",
+                    secDesc: "Substitute this political murder for the sudden, tragic loss of something genuinely precious in your own history registry database.",
+                    tip: "Take a full three-second silent beat before you speak the final word, 'All?' Let your face fall completely flat."
+                },
+                {
+                    title: "Interrogation / Stalling Tactic",
+                    prompt: "You ask me if I am lying? The question itself is a calculated diversion from the data file structure.",
+                    desc: "You are being interrogated, and you are hiding critical data coordinates. Use intellectual arrogance and calculated logic as your structural shield.",
+                    secTitle: "Secret Monologue: Contempt",
+                    secDesc: "I am smarter than you, I know where the data is, and you will never find the access key code. I am enjoying watching you fail.",
+                    tip: "Adopt a posture of complete relaxation. Lower your voice pitch to its minimum structural baseline register."
+                },
+                {
+                    title: "Betrayal Resolution Matrix",
+                    prompt: "I stood by you when everyone else called you a total liability.",
+                    desc: "An intense confrontation between former close allies. Do not scream the words; pull back power into a cold, quiet whisper of complete disappointment.",
+                    secTitle: "Internal Motivation: Finality",
+                    secDesc: "You are setting a permanent boundary. This is the exact moment you realize the relationship cannot be recovered or debugged.",
+                    tip: "Slightly tilt your chin downward and maintain locking eye contact without blinking on the word 'Liability'."
+                },
+                {
+                    title: "Corporate Surveillance State",
+                    prompt: "We aren't here to discuss my history. We are here to talk about what you left on that system mainframe.",
+                    desc: "Deflecting a hostile question by instantly pivoting back to a hard piece of evidence. You hold the upper hand but must remain completely professional.",
+                    secTitle: "Subtextual Goal: Domination",
+                    secDesc: "Make them realize their attempts to dig into your files or background are failing completely.",
+                    tip: "Sharply pick up the tempo on the second sentence to push your partner onto the defensive."
+                },
+                {
+                    title: "The Ultimate Sacrifice Setup",
+                    prompt: "Close the security bulkheads behind me. Do it now, before the sequence overrides your controls.",
+                    desc: "A sci-fi sci-tech scenario where you are trapped on the dangerous side of a base lockdown. Pure selflessness masked as strict tactical commands.",
+                    secTitle: "Hidden Objective: Peace",
+                    secDesc: "You accept your fate and don't want them to waste vital seconds attempting to rescue your coordinate profile.",
+                    tip: "Keep your chest high and open, breathing slowly to convey absolute calm in the center of a total emergency."
+                },
+                {
+                    title: "Conspiracy Realization Logic",
+                    prompt: "They didn't lose the structural code. They published the backdoor credentials intentionally.",
+                    desc: "The devastating moment of discovering that a giant corporate entity engineered a crisis on purpose.",
+                    secTitle: "Psychological Shift: Dread",
+                    secDesc: "You aren't angry at the mistake anymore; you are terrified of the scale and scope of the entity's true power.",
+                    tip: "Deliver the line while slowly backing your physical stance away from the camera space, as if looking at a monster."
+                },
+                {
+                    title: "The Silent Manipulator Scheme",
+                    prompt: "Take a breath. Nobody is tracking your location anymore. You're completely safe here with us.",
+                    desc: "A classic false-comfort trap. The words sound like a warm sanctuary rescue, but your objective is full asset containment.",
+                    secTitle: "Subtextual Double-Cross",
+                    secDesc: "You are the one who leaked their data position in the first place, and you need them to stay put until extraction arrives.",
+                    tip: "Soften your facial expressions completely, dropping all micro-tension around your mouth structures."
+                },
+                {
+                    title: "The Retribution Monologue",
+                    prompt: "You thought I'd forget what you did to my team? I've been tracing this loop for three entire years.",
+                    desc: "Cold vengeance delivered smoothly. The hunt is over, you have successfully locked them down, and you are savouring the victory state.",
+                    secTitle: "Emotional Focus: Satisfaction",
+                    secDesc: "A controlled, quiet celebration of patience and strategic planning over reckless chaotic anger.",
+                    tip: "Let out a brief, genuine micro-smile right between the first and second sentences."
+                }
+            ],
+            voice: [
+                {
+                    title: "Residual Breath Compression",
+                    prompt: "There is someone else inside this room. Keep quiet.",
+                    desc: "Exhale 85% of your available lung capacity completely before speaking. Execute the performance utilizing only the residual air pocket trapped in your lower chest.",
+                    secTitle: "Acoustic Target Parameter",
+                    secDesc: "Forces your delivery to sound naturally desperate and raspy without artificially stressing your throat tissue.",
+                    tip: "Execute a full 2-second micro-pause right before delivering the structural word 'Quiet'."
+                },
+                {
+                    title: "Operative Stress Shift Matrix",
+                    prompt: "I never said you were the one who lost the folder files.",
+                    desc: "Human intent changes based on stress anchors. Test this line by shifting emphasis across specific terms to completely transform the accusation.",
+                    secTitle: "Vocal Target Breakdown",
+                    secDesc: "Punching 'NEVER' acts defensively. Punching 'YOU' turns the line into an attack. Punching 'FILES' shifts it to administrative tracking.",
+                    tip: "Physically lean your body framework forward into the lens coordinates right as you hit the stressed word."
+                },
+                {
+                    title: "Vocal Projection / Command Tone",
+                    prompt: "Step away from the control console mainframe terminal right now. This is not an iterative request loop.",
+                    desc: "Your character is an operator giving a final warning. Project authority using chest resonance, not standard throat volume.",
+                    secTitle: "Acoustic Constraint: Metal",
+                    secDesc: "Make your voice sound like cold, unyielding machinery architecture. Precise, rhythmic, and absolutely flat in its emotional variable fields.",
+                    tip: "Imagine you are speaking on an active battlefield network with high background noise database traffic."
+                },
+                {
+                    title: "The Manipulator / Lower Pitch",
+                    prompt: "We have an agreement. Don't let your temporary code variables affect the outcome parameters.",
+                    desc: "Use your lower pitch register to create an atmosphere of dangerous intimacy. You are manipulating the listener, pulling them deeper into your scheme.",
+                    secTitle: "Vocal Goal: The Hook",
+                    secDesc: "To sound soothing yet utterly terrifying. The calm voice of a snake inviting its prey closer to the attack coordinate.",
+                    tip: "Adopt a subtle, closed-mouth smile while speaking, which naturally suppresses throat volume variables."
+                },
+                {
+                    title: "Staccato Technical Cadence",
+                    prompt: "Inbound. Target locked. System failure imminent. Initiate backup sequence protocols immediately.",
+                    desc: "Break every phrase down into sharp, isolated digital blocks. No fluid connections between words; mimic a high-priority warning computer.",
+                    secTitle: "Vocal Mechanic: Stop-Gate",
+                    secDesc: "Build structural tension by cutting off the ending consonants of each word instantly.",
+                    tip: "Tap your foot sharply on the floor for each word to maintain a rigid, synthetic rhythm."
+                },
+                {
+                    title: "Sustained Monotone Broadcast",
+                    prompt: "The network structure has collapsed entirely. There are no remaining safe servers on this line.",
+                    desc: "Deliver this completely flat. Zero emotional rises, zero inflection changes, zero pitch drops. Pure, factual devastation.",
+                    secTitle: "Acoustic Target: Neutral",
+                    secDesc: "Simulates the chilling effect of an emergency emergency announcement system playing on an automated loop.",
+                    tip: "Keep your lips as still as humanly possible, using only your tongue mechanics to shape the vowels."
+                },
+                {
+                    title: "High-Pitch Velocity Panic",
+                    prompt: "Wait, look at the screen monitors! The power grid coordinates are jumping! Why is it doing that?!",
+                    desc: "Shift your vocal register into your throat and nasal cavities to mimic an elite tech operator watching their code base burn in real-time.",
+                    secTitle: "Acoustic Goal: Velocity",
+                    secDesc: "Increase word speed by 40%. Compress the spacing between questions to create breathless claustrophobia.",
+                    tip: "Keep your eyes darting left and right across an imaginary grid while delivering the script fast."
+                },
+                {
+                    title: "The Gravel Tone Under-Cut",
+                    prompt: "If you cross that perimeter line, you will be entirely on your own. I won't deploy extraction assets.",
+                    desc: "Introduce a subtle rasp or vocal fry to the bottom register of your speech pattern. This signals severe physical or psychological exhaustion.",
+                    secTitle: "Vocal Subtext: Weariness",
+                    secDesc: "You are dealing with an ally who refuses to listen to logic, and you are tired of saving them from code errors.",
+                    tip: "Keep your body completely limp and heavy, letting the air drag slowly past your vocal cords."
+                },
+                {
+                    title: "The Whispered Threat Blueprint",
+                    prompt: "Look very closely at my face. Do I look like someone who is kidding around with you?",
+                    desc: "Drop your audio output level down to 15%. Force the viewer or microphone to lean forward into your space to catch the frequencies.",
+                    secTitle: "Acoustic Trap: Focus",
+                    secDesc: "A quiet voice commands absolute attention and signals profound, dangerous confidence.",
+                    tip: "Do not let any excess air leak out. Every single syllable must be crisp and hyper-focused."
+                },
+                {
+                    title: "The Rhythmic Accent Deception",
+                    prompt: "Everything you built here is beautiful. It is almost a shame we have to clear the directories.",
+                    desc: "Elongate the vowel sound patterns on positive terms like 'beautiful' and sharply compress structural execution elements on 'clear'.",
+                    secTitle: "Vocal Paradox Architecture",
+                    secDesc: "Creating a jarring artistic mismatch between a pleasant, smooth melody and a dark, destructive message.",
+                    tip: "Gently tilt your head to one side like an curious art critic inspecting a painting."
+                }
+            ]
+        };
+
+        const advancedModifiers = [
+            "MIX TAKE: Stretch the internal pauses between thought layers to 3 full seconds.",
+            "MIX TAKE: Deliver the full script while holding an intense, quiet laugh under your words.",
+            "MIX TAKE: Drop the volume to a near whisper, forcing the mic to track your raw gravel tone.",
+            "MIX TAKE: Speak with extreme exhaustion, treating each word as your final energy resource.",
+            "MIX TAKE: Deliver the lines with a hyper-fast tempo, as if running out of a closing room.",
+            "MIX TAKE: Force an uncomfortable, artificial smile throughout every single word spoken."
+        ];
+
+        let currentCategory = 'emotion';
+        let cardIndex = 0;
+        let isRevealed = false;
+
+        function toggleMode(modeKey) {
+            if (currentCategory === modeKey) return;
+            currentCategory = modeKey;
+            cardIndex = 0;
+            isRevealed = false;
+
+            document.getElementById('tab-emotion').classList.toggle('active', modeKey === 'emotion');
+            document.getElementById('tab-voice').classList.toggle('active', modeKey === 'voice');
+
+            updateAppUi();
+        }
+
+        function updateAppUi() {
+            const currentDeck = gameDatabase[currentCategory];
+            const activeNode = currentDeck[cardIndex];
+
+            if (!activeNode) return;
+
+            document.getElementById('scriptLineDisplay').innerText = `"${activeNode.prompt}"`;
+            document.getElementById('modeTitle').innerText = activeNode.title;
+            document.getElementById('modeDesc').innerText = activeNode.desc;
+            document.getElementById('secretTitle').innerText = activeNode.secTitle;
+            document.getElementById('secretDesc').innerText = activeNode.secDesc;
+            document.getElementById('tipDesc').innerText = activeNode.tip;
+
+            const secretCardEl = document.getElementById('secretBox');
+            const labelEl = document.getElementById('secretLabel');
+
+            if (isRevealed) {
+                secretCardEl.classList.remove('hidden');
+                labelEl.style.display = 'none';
+            } else {
+                secretCardEl.classList.add('hidden');
+                labelEl.style.display = 'block';
+            }
+        }
+
+        function changeCard() {
+            const currentDeck = gameDatabase[currentCategory];
+            cardIndex = (cardIndex + 1) % currentDeck.length;
+            isRevealed = false;
+            updateAppUi();
+        }
+
+        function clickRevealSecret() {
+            isRevealed = !isRevealed;
+            updateAppUi();
+        }
+
+        function mixUpDirectorNote() {
+            const randomMix = advancedModifiers[Math.floor(Math.random() * advancedModifiers.length)];
+            document.getElementById('tipDesc').innerHTML = `<strong>${randomMix}</strong>`;
+        }
+
+        /* --- FEEDBACK REAL LOG DRAWER SCRIPTING --- */
+        function openFeedbackDrawer() {
+            document.getElementById('feedbackDrawer').classList.add('open');
+        }
+
+        function closeFeedbackDrawer() {
+            document.getElementById('feedbackDrawer').classList.remove('remove');
+            document.getElementById('feedbackDrawer').classList.toggle('open', false);
+        }
+
+        function saveFeedbackNote() {
+            const textarea = document.getElementById('feedbackNoteInput');
+            const noteText = textarea.value.trim();
+            if (noteText === "") return;
+
+            const currentDeck = gameDatabase[currentCategory];
+            const activeNode = currentDeck[cardIndex];
+
+            const emptyMsg = document.getElementById('emptyNotesMsg');
+            if (emptyMsg) emptyMsg.remove();
+
+            const container = document.getElementById('notesListContainer');
+            const noteItem = document.createElement('div');
+            noteItem.className = 'note-item';
+            
+            noteItem.innerHTML = `
+                <div class="note-tag">${activeNode.title}</div>
+                <div>${noteText}</div>
+            `;
+
+            container.insertBefore(noteItem, container.firstChild);
+            textarea.value = "";
+        }
+
+        window.onload = () => {
+            updateAppUi();
+        };
+    </script>
+</body>
+</html>
