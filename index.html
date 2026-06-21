@@ -4,14 +4,40 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>STAGE.LAB — Acting Rehearsal Tool</title>
-<meta name="theme-color" content="#0A0A0A">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-512.png">
-
 <meta name="description" content="STAGE.LAB is a professional rehearsal tool for actors. Master subtext, vocal delivery, and performance technique with scene-by-scene coaching cards.">
+
+<!-- ═══ GOOGLE ANALYTICS ═══ -->
+<!-- Step 1: Go to analytics.google.com and create an account for your site -->
+<!-- Step 2: Replace YOUR-GOOGLE-ID below with your real ID (looks like G-XXXXXXXXXX) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=YOUR-GOOGLE-ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'YOUR-GOOGLE-ID');
+</script>
+
+<!-- ═══ MICROSOFT CLARITY (session recordings) ═══ -->
+<!-- Step 1: Go to clarity.microsoft.com and create a free project -->
+<!-- Step 2: Replace YOUR-CLARITY-ID below with your real ID (looks like a short code e.g. abc123xyz) -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "YOUR-CLARITY-ID");
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0A0A0A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="STAGE.LAB">
+<link rel="apple-touch-icon" href="icon-192.png">
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root {
@@ -29,6 +55,234 @@
   --gold-dim: #7A6228;
   --red:      #B84040;
 }
+
+/* ─── SIGN-IN SCREEN ─── */
+.signin-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--black);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+}
+
+.signin-screen.hidden {
+  display: none;
+}
+
+.signin-bg-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  pointer-events: none;
+}
+
+.signin-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.signin-logo-dot {
+  width: 8px; height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+.signin-headline {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 32px;
+  color: var(--white);
+  text-align: center;
+  line-height: 1.25;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.signin-sub {
+  font-size: 14px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.6;
+  max-width: 280px;
+  margin-bottom: 52px;
+  position: relative;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 300px;
+  background: var(--white);
+  color: #1a1a1a;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.12s;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+.google-btn:active {
+  opacity: 0.85;
+  transform: scale(0.97);
+}
+
+.signin-footer {
+  position: absolute;
+  bottom: 28px;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.6;
+  padding: 0 32px;
+}
+
+/* ─── PROFILE CHIP ─── */
+.profile-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px 4px 4px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.profile-chip:active { border-color: var(--border-hi); }
+
+.profile-avatar {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-hi);
+}
+
+.profile-avatar-fallback {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--black);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text);
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─── SIGN OUT SHEET ─── */
+.signout-sheet {
+  position: fixed;
+  bottom: 0; left: 0; width: 100%;
+  background: var(--deep);
+  border-top: 1px solid var(--border-hi);
+  border-radius: 18px 18px 0 0;
+  padding: 20px 16px 32px;
+  z-index: 300;
+  transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.22,0.78,0.44,0.98);
+}
+
+.signout-sheet.open { transform: translateY(0); }
+
+.signout-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.signout-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--gold);
+}
+
+.signout-avatar-fallback {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--black);
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.signout-info-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.signout-info-email {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.signout-btn {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  color: #e05555;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: opacity 0.15s;
+}
+
+.signout-btn:active { opacity: 0.7; }
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 
@@ -60,6 +314,7 @@ body{
   overflow:hidden;
 }
 
+/* scanline texture */
 .stage-header::before{
   content:'';
   position:absolute;
@@ -527,10 +782,491 @@ body{
   background:var(--gold);
   transition:width 0.3s ease;
 }
+
+/* ─── ONBOARDING SCREEN ─── */
+
+/* ══════════════════════════════════════════
+   ONBOARDING — CINEMATIC EDITION
+══════════════════════════════════════════ */
+
+#onboardScreen {
+  font-family: 'Inter', sans-serif;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Animated noise grain texture */
+#onboardScreen::after {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  width: 200%; height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  animation: grain 0.5s steps(2) infinite;
+}
+
+@keyframes grain {
+  0%   { transform: translate(0,0) }
+  25%  { transform: translate(-2%,-3%) }
+  50%  { transform: translate(3%,1%) }
+  75%  { transform: translate(-1%,3%) }
+  100% { transform: translate(2%,-1%) }
+}
+
+/* ── INTRO SPLASH ── */
+.ob-intro {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  z-index: 2;
+  padding: 32px;
+  background: #0A0A0A;
+}
+
+.ob-intro-logo {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #C9A84C;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeUp 0.7s ease 0.3s forwards;
+  margin-bottom: 20px;
+}
+
+.ob-intro-dot {
+  width: 7px; height: 7px;
+  background: #C9A84C;
+  border-radius: 50%;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+.ob-intro-title {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(36px, 10vw, 52px);
+  color: #F5F5F0;
+  text-align: center;
+  line-height: 1.15;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp 0.8s ease 0.6s forwards;
+  margin-bottom: 18px;
+}
+
+.ob-intro-title span {
+  color: #C9A84C;
+}
+
+.ob-intro-sub {
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+  line-height: 1.7;
+  max-width: 260px;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeUp 0.8s ease 0.9s forwards;
+  margin-bottom: 52px;
+}
+
+.ob-intro-btn {
+  background: #C9A84C;
+  color: #0A0A0A;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 16px 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeUp 0.8s ease 1.2s forwards;
+  transition: transform 0.1s, opacity 0.1s;
+  box-shadow: 0 0 32px rgba(201,168,76,0.25);
+}
+
+.ob-intro-btn:active {
+  transform: scale(0.96);
+  opacity: 0.85;
+}
+
+.ob-intro-skip {
+  font-size: 11px;
+  color: #333;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 20px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease 1.5s forwards;
+  padding: 8px;
+}
+
+/* Gold ring glow behind title */
+.ob-intro-glow {
+  position: absolute;
+  width: 360px; height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 65%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -54%);
+  pointer-events: none;
+}
+
+/* ── QUESTION SLIDES ── */
+.ob-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+  background: #0A0A0A;
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.ob-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.ob-slide.exit {
+  opacity: 0;
+  transform: translateX(-40px);
+}
+
+/* Top bar */
+.ob-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.ob-back-btn {
+  width: 34px; height: 34px;
+  background: #1A1A1A;
+  border: 1px solid #2E2E2E;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: #666;
+  font-size: 13px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.ob-back-btn:active { color: #C9A84C; border-color: #C9A84C; }
+
+.ob-step-counter {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #444;
+  text-transform: uppercase;
+}
+
+.ob-skip-link {
+  font-size: 11px;
+  color: #444;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 6px 2px;
+}
+
+/* Progress dots */
+.ob-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 20px 16px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.ob-dot {
+  height: 3px;
+  border-radius: 99px;
+  background: #222;
+  transition: width 0.3s ease, background 0.3s ease;
+  flex: 1;
+  max-width: 28px;
+}
+
+.ob-dot.done { background: #C9A84C; }
+.ob-dot.current { background: #C9A84C; opacity: 0.5; }
+
+/* Content area */
+.ob-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 24px 16px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  z-index: 1;
+}
+
+.ob-q-category {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #C9A84C;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ob-q-category::before {
+  content: '';
+  display: block;
+  width: 16px; height: 1px;
+  background: #C9A84C;
+}
+
+.ob-q-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(22px, 6vw, 29px);
+  color: #F5F5F0;
+  line-height: 1.3;
+  margin-bottom: 28px;
+}
+
+/* Choice grid */
+.ob-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.ob-choice {
+  background: #111;
+  border: 1px solid #252525;
+  border-radius: 12px;
+  color: #777;
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 14px 16px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.18s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ob-choice::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: #C9A84C;
+  transform: scaleY(0);
+  transition: transform 0.18s ease;
+  border-radius: 0 2px 2px 0;
+}
+
+.ob-choice:active { transform: scale(0.98); }
+
+.ob-choice.selected {
+  background: rgba(201,168,76,0.1);
+  border-color: #C9A84C;
+  color: #F5F5F0;
+}
+
+.ob-choice.selected::before {
+  transform: scaleY(1);
+}
+
+.ob-choice-icon {
+  font-size: 18px;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Text input question */
+.ob-name-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ob-name-input {
+  background: #111;
+  border: 1.5px solid #2E2E2E;
+  border-radius: 12px;
+  color: #F5F5F0;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 22px;
+  padding: 16px 18px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s;
+  caret-color: #C9A84C;
+}
+
+.ob-name-input:focus { border-color: #C9A84C; }
+.ob-name-input::placeholder { color: #2E2E2E; font-size: 18px; }
+
+.ob-name-hint {
+  font-size: 11px;
+  color: #333;
+  letter-spacing: 0.5px;
+  padding-left: 2px;
+}
+
+.ob-name-submit {
+  background: #C9A84C;
+  color: #0A0A0A;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: opacity 0.15s, transform 0.1s;
+  margin-top: 4px;
+}
+
+.ob-name-submit:active { opacity: 0.8; transform: scale(0.97); }
+
+/* ── CURTAIN FINALE ── */
+.ob-finale {
+  position: absolute;
+  inset: 0;
+  background: #0A0A0A;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  z-index: 10;
+  padding: 32px;
+  opacity: 0;
+  animation: finaleIn 0.6s ease forwards;
+}
+
+@keyframes finaleIn {
+  to { opacity: 1; }
+}
+
+.ob-finale-ring {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  border: 1.5px solid #C9A84C;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+  position: relative;
+  animation: ringPop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
+}
+
+@keyframes ringPop {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.ob-finale-ring::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.2);
+  animation: ringPop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.35s both;
+}
+
+.ob-finale-icon {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.ob-finale-name {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(30px, 8vw, 42px);
+  color: #F5F5F0;
+  text-align: center;
+  line-height: 1.2;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.5s forwards;
+  margin-bottom: 12px;
+}
+
+.ob-finale-name span { color: #C9A84C; }
+
+.ob-finale-sub {
+  font-size: 13px;
+  color: #444;
+  text-align: center;
+  line-height: 1.7;
+  max-width: 240px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.75s forwards;
+}
+
+.ob-finale-line {
+  width: 40px; height: 1px;
+  background: #C9A84C;
+  margin: 20px auto 0;
+  opacity: 0;
+  animation: fadeUp 0.5s ease 1s forwards;
+}
+
+/* Shared animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+
 </style>
 </head>
 <body>
 
+<!-- ═══ ONBOARDING SCREEN (shown once) ═══ -->
+<div id="onboardScreen" style="position:fixed;inset:0;background:#0A0A0A;z-index:999;display:flex;flex-direction:column;overflow:hidden;"></div>
+
+
+<!-- HEADER -->
 <header class="stage-header">
   <div class="header-top">
     <div class="brand">
@@ -546,10 +1282,12 @@ body{
   <div class="technique-label" id="techniqueLabel">—</div>
 </header>
 
+<!-- PROGRESS -->
 <div class="progress-bar">
   <div class="progress-fill" id="progressFill" style="width:5%"></div>
 </div>
 
+<!-- TABS -->
 <div class="tab-bar">
   <button class="tab active" id="tab-emotion" onclick="switchTab('emotion')">
     <i class="fa-solid fa-masks-theater"></i> Subtext Engine
@@ -559,6 +1297,7 @@ body{
   </button>
 </div>
 
+<!-- SCROLL CONTENT -->
 <div class="content-scroll" id="contentScroll">
 
   <div>
@@ -587,6 +1326,7 @@ body{
 
 </div>
 
+<!-- BOTTOM BAR -->
 <div class="bottom-bar">
   <button class="btn btn-ghost" style="width:100%" onclick="openDrawer()">
     <i class="fa-regular fa-pen-to-square"></i> Performance Journal
@@ -601,8 +1341,10 @@ body{
   </div>
 </div>
 
+<!-- OVERLAY -->
 <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
 
+<!-- DRAWER -->
 <div class="drawer" id="drawer">
   <div class="drawer-pill"></div>
   <div class="drawer-top">
@@ -619,10 +1361,15 @@ body{
   </div>
 </div>
 
+<!-- TOAST -->
 <div class="toast" id="toast">Entry Saved</div>
 
 <script>
+/* ══════════════════════════════════════════
+   DATABASE — 20 cards × 2 categories = 40
+══════════════════════════════════════════ */
 const DB = {
+
 emotion: [
   {
     title:"Uta Hagen — Substitution Method",
@@ -785,6 +1532,7 @@ emotion: [
     tip:"Speak at half your normal tempo. Pause after 'exactly one more chance.' The silence is the threat."
   }
 ],
+
 voice: [
   {
     title:"Residual Breath Compression",
@@ -955,6 +1703,7 @@ voice: [
     tip:"Elongate 'right now' by 30%. The stretch on those two words is the hand tightening around the evidence."
   }
 ]
+
 };
 
 const MIXES = [
@@ -968,11 +1717,13 @@ const MIXES = [
   "Find and hold the emotional register of the line — then deliver it in the opposite vocal tone."
 ];
 
+/* ── STATE ── */
 let cat = 'emotion';
 let idx = 0;
 let revealed = false;
 const notes = [];
 
+/* ── RENDER ── */
 function render(animate) {
   const deck = DB[cat];
   const card = deck[idx];
@@ -1010,6 +1761,7 @@ function render(animate) {
   document.getElementById('contentScroll').scrollTop = 0;
 }
 
+/* ── CONTROLS ── */
 function switchTab(key) {
   if (cat === key) return;
   cat = key;
@@ -1021,32 +1773,36 @@ function switchTab(key) {
 }
 
 function nextCard() {
+  soundCardFlip();
   idx = (idx + 1) % DB[cat].length;
   revealed = false;
   render(true);
 }
 
 function toggleReveal() {
+  soundReveal();
   revealed = !revealed;
   render(false);
 }
 
 function mixTake() {
+  soundShuffle();
   const mix = MIXES[Math.floor(Math.random() * MIXES.length)];
   document.getElementById('modNote').textContent = '⚡ ' + mix;
 }
 
+/* ── DRAWER ── */
 function openDrawer() {
   document.getElementById('drawer').classList.add('open');
   document.getElementById('overlay').classList.add('open');
 }
 
 function closeDrawer() {
-  document.getElementById('drawer').classList.remove('remove');
   document.getElementById('drawer').classList.remove('open');
   document.getElementById('overlay').classList.remove('open');
 }
 
+/* ── NOTES ── */
 function saveNote() {
   const input = document.getElementById('journalInput');
   const text = input.value.trim();
@@ -1072,6 +1828,7 @@ function renderNotes() {
   `).join('');
 }
 
+/* ── TOAST ── */
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -1079,16 +1836,484 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 
-// ─── PWA REGISTER FUNCTION ───
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('Service Worker Registered!', reg))
-      .catch(err => console.log('Service Worker Registration Failed:', err));
-  });
+
+/* ══════════════════════════════════════════
+   ONBOARDING — CINEMATIC EDITION
+   Shown once on first visit, never again.
+══════════════════════════════════════════ */
+
+/* ══════════════════════════════════════
+   SOUND ENGINE — Web Audio API
+   No files needed. All generated live.
+══════════════════════════════════════ */
+
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
 }
 
-window.addEventListener('load', () => render(false));
+// Soft tick — tapping a choice
+function soundTick() {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(820, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.06);
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.1);
+  } catch(e){}
+}
+
+// Soft whoosh — slide transition forward
+function soundWhoosh() {
+  try {
+    const ctx = getAudioCtx();
+    const bufferSize = ctx.sampleRate * 0.18;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1);
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(800, ctx.currentTime);
+    filter.frequency.exponentialRampToValueAtTime(2400, ctx.currentTime + 0.18);
+    filter.Q.value = 1.2;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.04);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    noise.start(ctx.currentTime);
+    noise.stop(ctx.currentTime + 0.18);
+  } catch(e){}
+}
+
+// Back whoosh — reverse direction
+function soundWhooshBack() {
+  try {
+    const ctx = getAudioCtx();
+    const bufferSize = ctx.sampleRate * 0.15;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1);
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(2000, ctx.currentTime);
+    filter.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.15);
+    filter.Q.value = 1.2;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.05, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    noise.start(ctx.currentTime);
+    noise.stop(ctx.currentTime + 0.15);
+  } catch(e){}
+}
+
+// Cinematic chord — finale welcome
+function soundFinale() {
+  try {
+    const ctx = getAudioCtx();
+    // Play a warm triad: root + fifth + octave
+    [[220, 0], [329, 0.08], [440, 0.16]].forEach(([freq, delay]) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      const t = ctx.currentTime + delay;
+      gain.gain.setValueAtTime(0.0, t);
+      gain.gain.linearRampToValueAtTime(0.07, t + 0.15);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 1.8);
+      osc.start(t);
+      osc.stop(t + 1.8);
+    });
+    // Soft high shimmer on top
+    const shimmer = ctx.createOscillator();
+    const sGain   = ctx.createGain();
+    shimmer.connect(sGain);
+    sGain.connect(ctx.destination);
+    shimmer.type = 'sine';
+    shimmer.frequency.value = 1320;
+    const t = ctx.currentTime + 0.3;
+    sGain.gain.setValueAtTime(0.0, t);
+    sGain.gain.linearRampToValueAtTime(0.03, t + 0.2);
+    sGain.gain.exponentialRampToValueAtTime(0.001, t + 1.2);
+    shimmer.start(t);
+    shimmer.stop(t + 1.2);
+  } catch(e){}
+}
+
+// Card flip — Next Scene button in main app
+function soundCardFlip() {
+  try {
+    const ctx = getAudioCtx();
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(440, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(280, ctx.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.05, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.12);
+  } catch(e){}
+}
+
+// Reveal unlock — tapping hidden layer
+function soundReveal() {
+  try {
+    const ctx = getAudioCtx();
+    [0, 0.07].forEach((delay, i) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = i === 0 ? 520 : 780;
+      const t = ctx.currentTime + delay;
+      gain.gain.setValueAtTime(0.06, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+      osc.start(t);
+      osc.stop(t + 0.18);
+    });
+  } catch(e){}
+}
+
+// Mix take — shuffle sound
+function soundShuffle() {
+  try {
+    const ctx = getAudioCtx();
+    [0, 0.05, 0.1].forEach((delay, i) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'triangle';
+      osc.frequency.value = 300 + (i * 120);
+      const t = ctx.currentTime + delay;
+      gain.gain.setValueAtTime(0.04, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+      osc.start(t);
+      osc.stop(t + 0.1);
+    });
+  } catch(e){}
+}
+
+
+const QUESTIONS = [
+  {
+    id: 'source',
+    category: 'Discovery',
+    question: 'How did you find STAGE.LAB?',
+    type: 'choice',
+    options: [
+      { icon: '📱', text: 'Social Media' },
+      { icon: '🗣️', text: 'Friend or Word of Mouth' },
+      { icon: '🔍', text: 'Google Search' },
+      { icon: '▶️', text: 'YouTube' },
+      { icon: '✨', text: 'Somewhere else' }
+    ]
+  },
+  {
+    id: 'passion',
+    category: 'Your Drive',
+    question: 'What drives you as a performer?',
+    type: 'choice',
+    options: [
+      { icon: '📖', text: 'Storytelling' },
+      { icon: '💧', text: 'Emotional Truth' },
+      { icon: '🎭', text: 'Character Building' },
+      { icon: '⭐', text: 'Recognition & Fame' },
+      { icon: '❤️', text: 'Pure Love of the Craft' }
+    ]
+  },
+  {
+    id: 'acting_reason',
+    category: 'Your Why',
+    question: 'Why do you act?',
+    type: 'choice',
+    options: [
+      { icon: '🏠', text: 'It feels like home' },
+      { icon: '🌊', text: 'I want to move people' },
+      { icon: '🦋', text: 'I love becoming someone else' },
+      { icon: '⚡', text: 'It constantly challenges me' },
+      { icon: '🎲', text: 'I stumbled in and stayed' }
+    ]
+  },
+  {
+    id: 'level',
+    category: 'Your Level',
+    question: 'Where are you in your journey?',
+    type: 'choice',
+    options: [
+      { icon: '🌱', text: 'Complete Beginner' },
+      { icon: '📚', text: 'Student / In Training' },
+      { icon: '🎬', text: 'Semi-Professional' },
+      { icon: '🏆', text: 'Working Professional' },
+      { icon: '🎓', text: 'Coach or Director' }
+    ]
+  },
+  {
+    id: 'goal',
+    category: 'Your Goal',
+    question: 'What is your main focus right now?',
+    type: 'choice',
+    options: [
+      { icon: '🚀', text: 'Land my first role' },
+      { icon: '🔧', text: 'Sharpen my technique' },
+      { icon: '🎥', text: 'Build my reel' },
+      { icon: '🎯', text: 'Prep for an audition' },
+      { icon: '🌟', text: 'Teach or direct others' }
+    ]
+  },
+  {
+    id: 'practice',
+    category: 'Your Routine',
+    question: 'How often do you rehearse?',
+    type: 'choice',
+    options: [
+      { icon: '🔥', text: 'Every single day' },
+      { icon: '💪', text: 'A few times a week' },
+      { icon: '📅', text: 'Once a week' },
+      { icon: '🌙', text: 'Occasionally' },
+      { icon: '👋', text: 'Just getting started' }
+    ]
+  },
+  {
+    id: 'name',
+    category: 'Almost There',
+    question: 'What should we call you?',
+    type: 'text',
+    placeholder: 'Stage name or first name...'
+  }
+];
+
+let obStep    = 0;
+let obStarted = false;
+const obAnswers = {};
+
+function initOnboarding() {
+  const done = localStorage.getItem('stagelab_onboarded');
+  if (done) {
+    document.getElementById('onboardScreen').style.display = 'none';
+    render(false);
+    return;
+  }
+  showIntroSplash();
+}
+
+/* ── INTRO SPLASH ── */
+function showIntroSplash() {
+  const screen = document.getElementById('onboardScreen');
+  screen.style.display = 'flex';
+  screen.innerHTML = `
+    <div class="ob-intro-glow"></div>
+    <div class="ob-intro">
+      <div class="ob-intro-logo">
+        <div class="ob-intro-dot"></div>
+        STAGE.LAB
+      </div>
+      <div class="ob-intro-title">Your Stage.<br><span>Your Method.</span></div>
+      <div class="ob-intro-sub">A professional rehearsal tool built for serious actors. Let's get to know you first.</div>
+      <button class="ob-intro-btn" onclick="beginOnboarding()">
+        Begin <i class="fa-solid fa-arrow-right"></i>
+      </button>
+      <div class="ob-intro-skip" onclick="skipOnboarding()">Skip setup</div>
+    </div>
+  `;
+}
+
+function beginOnboarding() {
+  soundTick();
+  obStarted = true;
+  renderSlide(0);
+}
+
+/* ── QUESTION SLIDES ── */
+function renderSlide(i) {
+  const screen = document.getElementById('onboardScreen');
+  const q      = QUESTIONS[i];
+  const total  = QUESTIONS.length;
+
+  const dotsHTML = QUESTIONS.map((_, di) => {
+    let cls = di < i ? 'done' : di === i ? 'current' : '';
+    return `<div class="ob-dot ${cls}"></div>`;
+  }).join('');
+
+  const bodyHTML = q.type === 'choice'
+    ? `<div class="ob-choices">
+        ${q.options.map(opt => `
+          <button class="ob-choice" onclick="pickChoice(this,'${q.id}','${opt.text.replace(/'/g,"\'")}')">
+            <span class="ob-choice-icon">${opt.icon}</span>
+            <span>${opt.text}</span>
+          </button>
+        `).join('')}
+       </div>`
+    : `<div class="ob-name-wrap">
+        <input class="ob-name-input" id="obNameInput" type="text"
+          placeholder="${q.placeholder}"
+          maxlength="28"
+          autocomplete="off"
+          oninput="this.style.borderColor='#C9A84C'"
+          onkeydown="if(event.key==='Enter')submitName()">
+        <div class="ob-name-hint">This is how you'll appear in your journal.</div>
+        <button class="ob-name-submit" onclick="submitName()">
+          Enter the Stage <i class="fa-solid fa-arrow-right"></i>
+        </button>
+       </div>`;
+
+  const slideHTML = `
+    <div class="ob-slide" id="obSlide">
+      <div class="ob-topbar">
+        <div class="ob-back-btn" onclick="goBackSlide()" style="${i === 0 ? 'opacity:0;pointer-events:none' : ''}">
+          <i class="fa-solid fa-chevron-left"></i>
+        </div>
+        <div class="ob-step-counter">${i + 1} &nbsp;/&nbsp; ${total}</div>
+        <div class="ob-skip-link" onclick="skipOnboarding()">Skip</div>
+      </div>
+      <div class="ob-dots">${dotsHTML}</div>
+      <div class="ob-content">
+        <div class="ob-q-category">${q.category}</div>
+        <div class="ob-q-text">${q.question}</div>
+        ${bodyHTML}
+      </div>
+    </div>
+  `;
+
+  // If a slide exists, animate it out first
+  const existing = document.getElementById('obSlide');
+  if (existing) {
+    existing.classList.add('exit');
+    setTimeout(() => {
+      screen.innerHTML = slideHTML;
+      requestAnimationFrame(() => {
+        const slide = document.getElementById('obSlide');
+        if (slide) requestAnimationFrame(() => slide.classList.add('active'));
+      });
+      if (q.type === 'text') {
+        setTimeout(() => { const inp = document.getElementById('obNameInput'); if(inp) inp.focus(); }, 400);
+      }
+    }, 300);
+  } else {
+    screen.innerHTML = slideHTML;
+    requestAnimationFrame(() => {
+      const slide = document.getElementById('obSlide');
+      if (slide) requestAnimationFrame(() => slide.classList.add('active'));
+    });
+    if (q.type === 'text') {
+      setTimeout(() => { const inp = document.getElementById('obNameInput'); if(inp) inp.focus(); }, 400);
+    }
+  }
+}
+
+function pickChoice(btn, id, value) {
+  soundTick();
+  // Remove selected from siblings
+  btn.closest('.ob-choices').querySelectorAll('.ob-choice').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  obAnswers[id] = value;
+  setTimeout(() => advanceSlide(), 380);
+}
+
+function submitName() {
+  const inp = document.getElementById('obNameInput');
+  obAnswers['name'] = inp && inp.value.trim() ? inp.value.trim() : 'Actor';
+  advanceSlide();
+}
+
+function advanceSlide() {
+  soundWhoosh();
+  obStep++;
+  if (obStep >= QUESTIONS.length) {
+    showFinale();
+  } else {
+    renderSlide(obStep);
+  }
+}
+
+function goBackSlide() {
+  soundWhooshBack();
+  if (obStep === 0) return;
+  obStep--;
+  // Reverse direction: slide in from left
+  const screen = document.getElementById('onboardScreen');
+  const existing = document.getElementById('obSlide');
+  if (existing) {
+    existing.style.transform = 'translateX(40px)';
+    existing.style.opacity = '0';
+  }
+  setTimeout(() => renderSlide(obStep), 200);
+}
+
+/* ── FINALE ── */
+function showFinale() {
+  soundFinale();
+  localStorage.setItem('stagelab_onboarded', 'true');
+  localStorage.setItem('stagelab_profile', JSON.stringify(obAnswers));
+
+  const name   = obAnswers.name || 'Actor';
+  const screen = document.getElementById('onboardScreen');
+
+  screen.innerHTML = `
+    <div class="ob-finale">
+      <div class="ob-finale-ring">
+        <div class="ob-finale-icon">🎬</div>
+      </div>
+      <div class="ob-finale-name">Welcome,<br><span>${name}.</span></div>
+      <div class="ob-finale-sub">Your stage is set.<br>Your scenes are ready.<br>Let's get to work.</div>
+      <div class="ob-finale-line"></div>
+    </div>
+  `;
+
+  setTimeout(() => {
+    const s = document.getElementById('onboardScreen');
+    s.style.transition = 'opacity 0.65s ease';
+    s.style.opacity = '0';
+    setTimeout(() => {
+      s.style.display = 'none';
+      render(false);
+    }, 650);
+  }, 2400);
+}
+
+function skipOnboarding() {
+  localStorage.setItem('stagelab_onboarded', 'true');
+  const s = document.getElementById('onboardScreen');
+  s.style.transition = 'opacity 0.4s ease';
+  s.style.opacity = '0';
+  setTimeout(() => { s.style.display = 'none'; render(false); }, 400);
+}
+
+window.addEventListener('load', () => initOnboarding());
+
+
+
+// ── PWA SERVICE WORKER REGISTRATION ──
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js')
+    .then(() => console.log('STAGE.LAB: Service Worker registered'))
+    .catch(err => console.log('SW error:', err));
+}
 </script>
 </body>
 </html>
+
