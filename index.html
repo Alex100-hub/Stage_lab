@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>STAGE.LAB — Acting Rehearsal Tool</title>
+<meta name="theme-color" content="#0A0A0A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-512.png">
+
 <meta name="description" content="STAGE.LAB is a professional rehearsal tool for actors. Master subtext, vocal delivery, and performance technique with scene-by-scene coaching cards.">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -54,7 +60,6 @@ body{
   overflow:hidden;
 }
 
-/* scanline texture */
 .stage-header::before{
   content:'';
   position:absolute;
@@ -526,7 +531,6 @@ body{
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="stage-header">
   <div class="header-top">
     <div class="brand">
@@ -542,12 +546,10 @@ body{
   <div class="technique-label" id="techniqueLabel">—</div>
 </header>
 
-<!-- PROGRESS -->
 <div class="progress-bar">
   <div class="progress-fill" id="progressFill" style="width:5%"></div>
 </div>
 
-<!-- TABS -->
 <div class="tab-bar">
   <button class="tab active" id="tab-emotion" onclick="switchTab('emotion')">
     <i class="fa-solid fa-masks-theater"></i> Subtext Engine
@@ -557,7 +559,6 @@ body{
   </button>
 </div>
 
-<!-- SCROLL CONTENT -->
 <div class="content-scroll" id="contentScroll">
 
   <div>
@@ -586,7 +587,6 @@ body{
 
 </div>
 
-<!-- BOTTOM BAR -->
 <div class="bottom-bar">
   <button class="btn btn-ghost" style="width:100%" onclick="openDrawer()">
     <i class="fa-regular fa-pen-to-square"></i> Performance Journal
@@ -601,10 +601,8 @@ body{
   </div>
 </div>
 
-<!-- OVERLAY -->
 <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
 
-<!-- DRAWER -->
 <div class="drawer" id="drawer">
   <div class="drawer-pill"></div>
   <div class="drawer-top">
@@ -621,15 +619,10 @@ body{
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast">Entry Saved</div>
 
 <script>
-/* ══════════════════════════════════════════
-   DATABASE — 20 cards × 2 categories = 40
-══════════════════════════════════════════ */
 const DB = {
-
 emotion: [
   {
     title:"Uta Hagen — Substitution Method",
@@ -792,7 +785,6 @@ emotion: [
     tip:"Speak at half your normal tempo. Pause after 'exactly one more chance.' The silence is the threat."
   }
 ],
-
 voice: [
   {
     title:"Residual Breath Compression",
@@ -963,7 +955,6 @@ voice: [
     tip:"Elongate 'right now' by 30%. The stretch on those two words is the hand tightening around the evidence."
   }
 ]
-
 };
 
 const MIXES = [
@@ -977,13 +968,11 @@ const MIXES = [
   "Find and hold the emotional register of the line — then deliver it in the opposite vocal tone."
 ];
 
-/* ── STATE ── */
 let cat = 'emotion';
 let idx = 0;
 let revealed = false;
 const notes = [];
 
-/* ── RENDER ── */
 function render(animate) {
   const deck = DB[cat];
   const card = deck[idx];
@@ -1021,7 +1010,6 @@ function render(animate) {
   document.getElementById('contentScroll').scrollTop = 0;
 }
 
-/* ── CONTROLS ── */
 function switchTab(key) {
   if (cat === key) return;
   cat = key;
@@ -1048,18 +1036,17 @@ function mixTake() {
   document.getElementById('modNote').textContent = '⚡ ' + mix;
 }
 
-/* ── DRAWER ── */
 function openDrawer() {
   document.getElementById('drawer').classList.add('open');
   document.getElementById('overlay').classList.add('open');
 }
 
 function closeDrawer() {
+  document.getElementById('drawer').classList.remove('remove');
   document.getElementById('drawer').classList.remove('open');
   document.getElementById('overlay').classList.remove('open');
 }
 
-/* ── NOTES ── */
 function saveNote() {
   const input = document.getElementById('journalInput');
   const text = input.value.trim();
@@ -1085,12 +1072,20 @@ function renderNotes() {
   `).join('');
 }
 
-/* ── TOAST ── */
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ─── PWA REGISTER FUNCTION ───
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('Service Worker Registered!', reg))
+      .catch(err => console.log('Service Worker Registration Failed:', err));
+  });
 }
 
 window.addEventListener('load', () => render(false));
