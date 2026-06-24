@@ -2307,11 +2307,21 @@ window.addEventListener('load', () => initOnboarding());
 
 
 
-// ── PWA SERVICE WORKER REGISTRATION ──
+// ── PWA SERVICE WORKER — FORCE CLEAR OLD CACHE ──
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
-    .then(() => console.log('STAGE.LAB: Service Worker registered'))
-    .catch(err => console.log('SW error:', err));
+  // First wipe all old caches and registrations
+  navigator.serviceWorker.getRegistrations().then(registrations => {
+    registrations.forEach(sw => sw.unregister());
+  });
+  caches.keys().then(keys => {
+    keys.forEach(key => caches.delete(key));
+  });
+  // Then register fresh
+  setTimeout(() => {
+    navigator.serviceWorker.register('sw.js?v=3')
+      .then(() => console.log('STAGE.LAB: Fresh SW registered'))
+      .catch(err => console.log('SW error:', err));
+  }, 1000);
 }
 </script>
 </body>
